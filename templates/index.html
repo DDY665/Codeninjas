@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script>
+    <title>Web Form with Excel Integration</title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Prediction</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            overflow: hidden;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 50px;
+            border-radius: 12px;
+            box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            transform: scale(0.98);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            transform: scale(1);
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Form and Button Styling */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: left;
+        }
+
+        label {
+            font-size: 1.1rem;
+            color: #444;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        select {
+            padding: 14px 18px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background-color: #ffffff;
+            color: #333;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #6a11cb;
+            background-color: #f1faff;
+        }
+
+        button {
+            padding: 16px 24px;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 700;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #2575fc, #6a11cb);
+            transform: scale(1.1);
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            transform: scale(1);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .prediction {
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 1.4rem;
+            background-color: #f1faff;
+            color: #3498db;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .prediction h2 {
+            margin: 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ganga River Water Quality Prediction</h1>
+        <h1>PREDICTION BY <span class="auto-type"></span></h1>
+
+
+        <!-- Form to accept input data -->
+        <form method="POST" action="/predict">
+            <label for="input_data1">Select Location:</label>
+            <select id="input_data1" name="input_data1" required></select>
+
+            <label for="input_data2">Select Year:</label>
+            <select id="input_data2" name="input_data2" required></select>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if prediction is not none %}
+            <div class="prediction">
+                <h2>Prediction: {{ prediction }}</h2>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        const gangaLocations = [
+            "ALAKNANDA A/C MANDAKINI AT RUDRAPRAYAG", "BHAGIRATHI B/C WITH ALAKNANDA AT DEVPRAYAG",
+            "ALAKNANDA B/C TO BHAGIRATHI AT DEVPRAYAG", "ALAKNANDA A/C WITH BHAGIRATHI AT DEVPRAYAG",
+            "GANGA AT RISHIKESH U/S", "MANDAKINI B/C ALKALNADA AT RUDRAPRAYAG",
+            "RIVER GANGA D/S RISHIKESH", "GANGA RIVER AFTER CONFLUENCE OF RIVER SONG NEAR SATYANARAYAN TEMPLE, D/s RAIWALA, DEHRADUN",
+            "RIVER GANGA AT HAR KI PAURI GHAT", "GANGA AT HARIDWAR D/S, UPPER GANGA CANAL D/S BALKUMARI MANDIR, AJEETPUR, HARIDWAR",
+            "RIVER GANGA AT MADHYA GANGA BARRAGE, BIJNOR", "GANGA AT GARHMUKTESHWAR, U.P",
+            "RIVER GANGA AT GHARMUKTESHWAR", "GANGA U/S, ANOOPSHAHAR", "GANGA D/S, ANOOPSHAHAR",
+            "GANGA AT NARORA (BULANDSAHAR), U.P.", "RIVER GANGA AT FARRUKABAD", "GANGA AT KANNAUJ U/S (RAJGHAT), U.P",
+            "GANGA AT KANNAUJ D/S, U.P", "GANGA AT BITHOOR (KANPUR), U.P.", "GANGA AT KANPUR U/S (RANIGHAT), U.P",
+            "RIVER GANGA AT BATHING GHAT (BHARAOGHAT)", "RIVER GANGA AT D/S (SHUKLAGANJ)", "GANGA AT KANPUR D/S (JAJMAU PUMPING STATION), U.P",
+            "RIVER GANGA AT BATHING GHAT (JAJMAU BRIDGE)", "GANGA AT DALMAU (RAI BAREILLY), U.P.",
+            "GANGA AT KALA KANKAR, RAEBARELI", "GANGA AT ALLAHABAD (RASOOLABAD), U.P.", "GANGA AT KADAGHAT, ALLAHABAD",
+            "GANGA AT ALLAHABAD D/S (SANGAM), U.P.", "RIVER GANGA A/C TAMSA RIVER, SIRSA, SON BARSA", "GANGA U/S, VINDHYACHAL, MIRZAPUR",
+            "GANGA D/S, MIRZAPUR", "RIVER GANGA AT CHUNAR", "GANGA AT VARANASI U/S (ASSIGHAT), U.P", "GANGA AT VARANASI D/S (MALVIYA BRIDGE), U.P",
+            "RIVER GANGA A/C GOMTI RIVER, BHUSAULA", "RIVER GANGA AT BATHING GHAT (GOLA GHAT)", "GANGA AT TRIGHAT (GHAZIPUR), U.P",
+            "GANGA AT BUXAR", "RIVER GANGA AT U/S JAIL GHAT, BUXAR", "GANGA AT BUXAR, RAMREKHAGHAT",
+            "GANGA AT D/S BUXAR NEAR ROAD BRIDGE", "RIVER GANGA AT U/S BARAHPUR BINDTOLI", "GANGA AT ARA CHAPRA ROAD BRIDGE (KOILWER BANURA CHAPRA ROAD",
+            "GANGA AT THE CONFLUENCE OF SONE RIVER DORIGANJ, CHAPRA", "GANGA AT MAA AMBIKA ASTHAN, AAMI, SARAN", "GANGA NEAR DANAPUR (NEAR PIPA PUL), PATNA",
+            "GANGA AT KURJI, PATNA U/S", "GANGA AT GANDHIGHAT, NIT AT PATNA", "GANGA AT GULABI GHAT, PATNA", "GANGA AT PATNA D/S (GANGA BRIDGE), GAIGHAT",
+            "GANGA AT MALSALAMI, PATNA", "KACHCHI DARGAH BIDUPUR ROAD BRIDGE, PATNA", "RIVER GANGA AT TRIVENI GHAT, PATNA", "BAKHTIYARPUR TAJPUR BRIDGE ON GANGA, ATHMALGOLA, PATNA",
+            "GANGA AT KEWALA GHAT, FATUHA, PATNA", "GANGA RIVER AT BARH", "RIVER GANGA AT D/S NAWADAGHAT, BARH, PATNA",
+            "GANGA AT MOKAMA (U/s), MAHADEO ASTHAN, PATNA", "GANGA AT MOKAMA (D/s)", "GANGA RIVER AT BARAHIYA, NEPALITOLA, MARANCHI, LAKSHISARAI",
+            "GANGA AT U/S MUNGER (NEAR INTAKE WELL ON GANGA)", "GANGA AT MUNGER", "GANGA AT U/S SULTANGANJ, BHAGALPUR", "GANGA AT SULTANGANJ, BHAGALPUR",
+            "RIVER GANGA AT CHAMPANAGAR, BHAGALPUR", "GANGA AT BHAGALPUR", "GANGA AT U/S BHAGALPUR NEAR BARARIGHAT", "GANGA AT KAHALGAON",
+            "RIVER GANGA D/S NEAR CREMATION GHAT", "RIVER GANGA U/S NEAR LCT GHAT", "RIVER GANGA D/S NEAR JANTA GHAT", "RIVER GANGA AT SANGI DALAN",
+            "GANGA AT RAJMAHAL", "GANGA AT BAHARAMPORE, MURSHIDABAD, WEST BENGAL", "RIVER GANGA AT BEHRAMPORE (KHAGRA), MURSHIDABAD",
+            "RIVER GANGA AT BEHRAMPORE (GORA BAZAR), MURSHIDABAD", "NABADIP ON GANGA, GHOSHPARA NEAR MONIPURGHAT, NADIA", "TRIBENI ON GANGA, NEAR BURNING GHAT, HOOGHLY",
+            "RIVER GANGA AT PALTA, SHITALTALA", "GANGA AT PALTA WEST BENGAL", "GANGA AT SERAMPORE, HOOGHLY, WEST BENGAL", "GANGA AT DAKSHMINESHWAR, KOLKATA, WEST BENGAL",
+            "GANGA AT HOWRAH SHIVPUR WEST BENGAL", "GANGA AT GARDEN REACH, KOLKATA, WEST BENGAL", "GANGA AT ULUBERIA, HOWRAH, WEST BENGAL", "GANGA AT DIAMOND HARBOUR, 24 PARGANAS (S) WEST BENGAL"
+        ];
+        const years=[2025,2026,2027,2028];
+        let selectE1 = document.getElementById("input_data1");
+        let selectE2 = document.getElementById("input_data2");
+        for(let i of gangaLocations){
+               let o = document.createElement('option');
+                o.value = i;
+                o.textContent = i;
+                selectE1.appendChild(o);
+            }
+            for(let i of years){
+                let o=document.createElement("option");
+                o.value=i;
+                o.textContent=i;
+                selectE2.appendChild(o);
+            }
+            var typed = new Typed(".auto-type", {
+            strings: ["AREA", "YEAR"],
+            typeSpeed: 300,
+            backSpeed: 300,
+            loop: true
+        });
+    </script>
+</body>
+</html>
